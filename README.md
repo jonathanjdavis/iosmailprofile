@@ -1,5 +1,12 @@
-iOS Profile Generator
+iOS Email Profile Generator
+ v1.0
 
-Creates XML to allow people to simply enter their username/password and have
-an email profile created for them so they do not need to enter in additional
-about incoming/outgoing mail servers and port numbers
+Generates an XML email profile for iOS allowing users to simply enter their
+display name, username, and email address.
+
+This avoids having to explain incoming and outgoing mail servers, ports, and SSL
+encryption to the end user of the email accounts. Instead they can be directed
+to the location of this page. fill in the basic information, then be prompted
+to install the Email Profile; All from their iOS device.
+
+Users will only need to supply their password at the time the profile is installed.
