@@ -13,21 +13,35 @@ $generate = TRUE;
 if (isset($_POST)) {
 
     if(!empty($_POST['name'])) {
-        $name = $_POST['name'];
+        $name = trim(strip_tags ($_POST['name']));
       } else {
         $generate = FALSE;
         $name_m = 'class="missing" ';
     }
 
     if(!empty($_POST['username'])) {
-        $username = $_POST['username'];
+        $username = trim(strip_tags ($_POST['username']));
+
+        if (strpos($username, ' ') > 0) {
+            $generate = FALSE;
+            $username_m = 'class="missing" ';
+        }
+
       } else {
         $generate = FALSE;
         $username_m = 'class="missing" ';
     }
 
+
     if(!empty($_POST['email'])) {
-        $email = $_POST['email'];
+
+        $email = trim(strip_tags($_POST['email']));
+
+        if (!filter_var($email,FILTER_VALIDATE_EMAIL)) {
+            $generate = FALSE;
+            $email_m = 'class="missing" ';
+        }
+
     } else {
         $generate = FALSE;
         $email_m = 'class="missing" ';
@@ -174,7 +188,7 @@ $xml = <<< EOXMLF
 	<key>PayloadDescription</key>
 	<string>Snickers.org Email Configuration Profile for iOS Devices</string>
 	<key>PayloadDisplayName</key>
-	<string>Email Profile for {$email}</string>
+	<string>{$email} Profile</string>
 	<key>PayloadIdentifier</key>
 	<string>org.snickers.email.profile</string>
 	<key>PayloadOrganization</key>
