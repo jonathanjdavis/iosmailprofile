@@ -82,10 +82,11 @@ if (isset($_POST)) {
 
 $html = <<< EOHTMLF
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-CA">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
+<meta name="author" content="jonathan j davis@snickers.org">
 <title>iOS Email Profile Generator</title>
 <link rel="stylesheet" href="default.css">
 </head>
@@ -113,7 +114,6 @@ $html = <<< EOHTMLF
 </ul>
 </form>
 <p>Note: You will be prompted for your password when you install the profile on your device.</p>
-
 <p>To remove these profiles from your iOS device, go to Settings => General => Profiles, then click on the name of the profile you want to remove, and then click the Remove botton.</p>
 <p>Return to the <a href="http://www.snickers.org">Snickers.org</a> website.</p>
 <p class="right">View on <a href="http://github.com/notdavis/iosmailprofile"><img src="http://www.snickers.org/~davis/GitHub-Mark-32px.png"></a></p>
