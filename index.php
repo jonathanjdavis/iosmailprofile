@@ -66,14 +66,13 @@ if (isset($_POST)) {
 }
 
 
-
 $html = <<< EOHTMLF
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
 <title>iOS Email Profile Generator</title>
-<meta name="viewport" content="width=600px">
 <link rel="stylesheet" href="default.css">
 </head>
 <body>
@@ -103,6 +102,7 @@ $html = <<< EOHTMLF
 
 <p>To remove these profiles from your iOS device, go to Settings => General => Profiles, then click on the name of the profile you want to remove, and then click the Remove botton.</p>
 <p>Return to the <a href="http://www.snickers.org">Snickers.org</a> website.</p>
+<p class="right">View on <a href="http://github.com/notdavis/iosmailprofile"><img src="http://www.snickers.org/~davis/GitHub-Mark-32px.png"></a></p>
 </body>
 </html>
 EOHTMLF;
@@ -172,9 +172,9 @@ $xml = <<< EOXMLF
 		</dict>
 	</array>
 	<key>PayloadDescription</key>
-	<string>Snickers.org email configuration profile for iOS devices</string>
+	<string>Snickers.org Email Configuration Profile for iOS Devices</string>
 	<key>PayloadDisplayName</key>
-	<string>Snickers Email Profile</string>
+	<string>Email Profile for {$email}</string>
 	<key>PayloadIdentifier</key>
 	<string>org.snickers.email.profile</string>
 	<key>PayloadOrganization</key>

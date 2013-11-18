@@ -1,15 +1,13 @@
 html {
     background-color: #444;
     color: #333;
-    margin: auto;
-
 }
 
 body {
-    width: 580px;
+
     background-color: #fafafa;
     margin: auto;
-    font-size: 1em;
+    font-size: 12pt;
     padding: 22px;
     font-family: Georgia;
     border-bottom: 8px solid #5a5a5a;
@@ -17,17 +15,19 @@ body {
 
 label {
     color: #112735;
-    font-size: 1.2em;
+    font-size: 11pt;
     font-weight: bold;
-    text-align: right;
-    display: inline-block;
-    width: 8em;
+    display: block;
+    width: 120px;
+}
+
+input {
+    margin-left: 30px;
 }
 
 h1 {
     color: #0f5e90;
-    font-size: 1.5em;
-
+    font-size: 16pt;
     margin-top: 6px;
     margin-bottom: 12px;
     border-bottom: 1px solid #777;
@@ -35,13 +35,17 @@ h1 {
 
 ul {
     list-style: none;
+    padding: 0;
+    margin: 0;
     margin-bottom: 18px;
     margin-top: 8px;
 }
 
 li {
-    font-size: 0.8em;
-    padding-bottom: 2px;
+    padding: 0;
+    margin: 0;
+    font-size: 10pt;
+    padding-bottom: 6px;
 }
 
 p {
@@ -49,10 +53,19 @@ p {
     margin-bottom: 12px;
 }
 
+a {text-decoration:none;}
+a:link {color:#1266a0;}
+a:visited {color:#1266a0;}
+a:hover {color:#5f859f;}
+a:active {color:#0587e1;}
+
 .submit {
-    margin-left: 10em;
     font-weight: bold;
 
+}
+
+.right {
+    text-align: right;
 }
 
 .missing {
