@@ -1,76 +1,86 @@
 <?php
+// Authors:	Jonathan Davis <davis@snickers.org>
+//          Jon Nistor <nistor@snickers.org>
+// Purpose:	Generate snickers.org profile entries in iOS
 
-$name = NULL;
-$username = NULL;
-$email = NULL;
+$o_name		= NULL;
+$o_username	= NULL;
+$o_email	= NULL;
 
-$name_m = NULL;
-$username_m = NULL;
-$email_m = NULL;
+$o_name_m	= NULL;
+$o_username_m	= NULL;
+$o_email_m	= NULL;
 
-$generate = TRUE;
+$generate	= TRUE;
 
-if (isset($_POST)) {
+function gen_uuid()
+{
+    return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+        // 32 bits for "time_low"
+        mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
 
-    if(!empty($_POST['name'])) {
-        $name = trim(strip_tags ($_POST['name']));
+        // 16 bits for "time_mid"
+        mt_rand( 0, 0xffff ),
+
+        // 16 bits for "time_hi_and_version",
+        // four most significant bits holds version number 4
+        mt_rand( 0, 0x0fff ) | 0x4000,
+
+        // 16 bits, 8 bits for "clk_seq_hi_res",
+        // 8 bits for "clk_seq_low",
+        // two most significant bits holds zero and one for variant DCE1.1
+        mt_rand( 0, 0x3fff ) | 0x8000,
+
+        // 48 bits for "node"
+        mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
+    );
+}
+
+if( isset($_POST) )
+{
+
+    if(!empty($_POST['name']))
+    {
+        $o_name = trim(strip_tags ($_POST['name']));
       } else {
         $generate = FALSE;
-        $name_m = 'class="missing" ';
+        $o_name_m = 'class="missing" ';
     }
 
-    if(!empty($_POST['username'])) {
-        $username = trim(strip_tags ($_POST['username']));
+    if(!empty($_POST['username']))
+    {
+        $o_username = trim(strip_tags ($_POST['username']));
 
-        if (strpos($username, ' ') > 0) {
+        if (strpos($o_username, ' ') > 0) {
             $generate = FALSE;
-            $username_m = 'class="missing" ';
+            $o_username_m = 'class="missing" ';
         }
 
       } else {
         $generate = FALSE;
-        $username_m = 'class="missing" ';
+        $o_username_m = 'class="missing" ';
     }
 
 
-    if(!empty($_POST['email'])) {
+    if(!empty($_POST['email']))
+    {
+        $o_email = trim(strip_tags($_POST['email']));
 
-        $email = trim(strip_tags($_POST['email']));
-
-        if (!filter_var($email,FILTER_VALIDATE_EMAIL)) {
+        if( !filter_var($o_email,FILTER_VALIDATE_EMAIL) )
+	{
             $generate = FALSE;
-            $email_m = 'class="missing" ';
+            $o_email_m = 'class="missing" ';
         }
 
     } else {
         $generate = FALSE;
-        $email_m = 'class="missing" ';
+        $o_email_m = 'class="missing" ';
     }
 
-
-    if($generate) {
-
-        // Creates the two unique (random) ProfileUUIDs
-        // I do not know if this is correct, but it works
-
-        $uuid1 = NULL;
-        $uuid2 = NULL;
-
-        foreach(array(8,4,4,4,12) as $seg) {
-            $i = 1;
-            while($i <= $seg) {
-                $uuid1 .= strtoupper(dechex(rand(0,15)));
-                $uuid2 .= strtoupper(dechex(rand(0,15)));
-                $i++;
-            }
-
-            $uuid1 .= "-";
-            $uuid2 .= "-";
-        }
-
-        $uuid1 = substr($uuid1, 0, -1);
-        $uuid2 = substr($uuid2, 0, -1);
-
+    if( $generate )
+    {
+      $o_uuid1	= gen_uuid();
+      $o_uuid2	= gen_uuid();
     }
 
 } else {
@@ -91,22 +101,22 @@ $html = <<< EOHTMLF
 <link rel="stylesheet" href="default.css">
 </head>
 <body>
-<h1>iOS Email Profile Generator v1.0</h1>
+<h1>iOS Email Profile Generator v1.1</h1>
 <p>This page generates an email profile specific to Snickers.org which can be installed on iOS devices.</p>
 <p>Please enter the following information:</p>
 <form name="profile_info" action="{$_SERVER['PHP_SELF']}" method="post">
 <ul>
     <li>
-        <label for="name" {$name_m}>Display Name:</label>
-        <input type="text" name="name" value="{$name}">(e.g. Jon Nistor)
+        <label for="name" {$o_name_m}>Display Name:</label>
+        <input type="text" name="name" value="{$o_name}">(e.g. Jon Nistor)
     </li>
     <li>
-        <label for="username" {$username_m}>Username:</label>
-        <input type="text" name="username" value="{$username}">
+        <label for="username" {$o_username_m}>Username:</label>
+        <input type="text" name="username" onChange="javascript:this.value=this.value.toLowerCase();" value="{$o_username}">
     </li>
     <li>
-        <label for="email" {$email_m}>Email Address:</label>
-        <input type="email" name="email" size="32" value="{$email}">
+        <label for="email" {$o_email_m}>Email Address:</label>
+        <input type="email" name="email" size="32" value="{$o_email}">
     </li>
     <li class="submit">
          <input type="submit" value="Generate Your Profile" >
@@ -130,13 +140,13 @@ $xml = <<< EOXMLF
 	<array>
 		<dict>
 			<key>EmailAccountDescription</key>
-			<string></string>
+			<string>Snickers</string>
 			<key>EmailAccountName</key>
-			<string>{$name}</string>
+			<string>{$o_name}</string>
 			<key>EmailAccountType</key>
 			<string>EmailTypeIMAP</string>
 			<key>EmailAddress</key>
-			<string>{$email}</string>
+			<string>{$o_email}</string>
 			<key>IncomingMailServerAuthentication</key>
 			<string>EmailAuthPassword</string>
 			<key>IncomingMailServerHostName</key>
@@ -148,7 +158,7 @@ $xml = <<< EOXMLF
 			<key>IncomingMailServerUseSSL</key>
 			<true/>
 			<key>IncomingMailServerUsername</key>
-			<string>{$username}</string>
+			<string>{$o_username}</string>
 			<key>IncomingPassword</key>
 			<string></string>
 			<key>OutgoingMailServerAuthentication</key>
@@ -160,9 +170,10 @@ $xml = <<< EOXMLF
 			<key>OutgoingMailServerUseSSL</key>
 			<true/>
 			<key>OutgoingMailServerUsername</key>
-			<string>{$username}</string>
+			<string>{$o_username}</string>
 			<key>OutgoingPasswordSameAsIncomingPassword</key>
 			<true/>
+
 			<key>PayloadDescription</key>
 			<string>Configures email account.</string>
 			<key>PayloadDisplayName</key>
@@ -174,9 +185,10 @@ $xml = <<< EOXMLF
 			<key>PayloadType</key>
 			<string>com.apple.mail.managed</string>
 			<key>PayloadUUID</key>
-			<string>{$uuid1}</string>
+			<string>{$o_uuid1}</string>
 			<key>PayloadVersion</key>
 			<integer>1</integer>
+
 			<key>PreventAppSheet</key>
 			<false/>
 			<key>PreventMove</key>
@@ -188,7 +200,7 @@ $xml = <<< EOXMLF
 	<key>PayloadDescription</key>
 	<string>Snickers.org Email Configuration Profile for iOS Devices</string>
 	<key>PayloadDisplayName</key>
-	<string>{$email} Profile</string>
+	<string>{$o_email} Profile</string>
 	<key>PayloadIdentifier</key>
 	<string>org.snickers.email.profile</string>
 	<key>PayloadOrganization</key>
@@ -198,7 +210,7 @@ $xml = <<< EOXMLF
 	<key>PayloadType</key>
 	<string>Configuration</string>
 	<key>PayloadUUID</key>
-	<string>{$uuid2}</string>
+	<string>{$o_uuid2}</string>
 	<key>PayloadVersion</key>
 	<integer>1</integer>
 </dict>
@@ -206,9 +218,12 @@ $xml = <<< EOXMLF
 EOXMLF;
 
 if($generate) {
-    header("Content-type: text/plain");
+    // header("Content-type: text/plain");
+    // Modified per: http://www.rootmanager.com/iphone-ota-configuration/iphone-ota-setup-with-signed-mobileconfig.html
+    header('Content-type: application/x-apple-aspen-config; chatset=utf-8');
     header('Content-Disposition: attachment; filename="snickers.mobileconfig"');
     echo $xml;
+
 } else {
     echo $html;
 }
